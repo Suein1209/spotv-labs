@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안드 앱 딥링크 & API 테스트</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        section { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 8px 16px; cursor: pointer; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🚀 딥링크 및 API 테스트 컨트롤러</h1>
+
+    <!-- 1. 딥링크 테스트 영역 -->
+    <section>
+        <h2>1. 딥링크 테스트 (App Links / Intent)</h2>
+        <!-- 안드로이드 개발자니까 Intent 스킴 뭔지 알지? 네 앱 스킴으로 바꿔 써! -->
+        <a href="intent://#Intent;scheme=your_scheme;package=com.your.package;end">👉 안드로이드 앱 열기 (Intent Scheme)</a>
+    </section>
+
+    <!-- 2. GET API 호출 및 화면 구성 -->
+    <section>
+        <h2>2. 데이터 불러오기 (GET)</h2>
+        <button id="btnFetch">UI 업데이트</button>
+        <ul id="dataList"><li>버튼을 눌러서 데이터를 가져오세요.</li></ul>
+    </section>
+
+    <!-- 3. POST API 호출 (값 초기화) -->
+    <section>
+        <h2>3. 상태 초기화 (POST)</h2>
+        <button id="btnReset">서버 값 초기화 요청</button>
+        <p id="postResult">대기 중...</p>
+    </section>
+
+    <script>
+        // [원칙 1] 하드코딩 금지: URL과 엔드포인트는 상수로 관리
+        const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+        const ENDPOINT_GET = `${API_BASE_URL}/posts?_limit=3`;
+        const ENDPOINT_POST = `${API_BASE_URL}/posts`;
+
+        // UI 요소 캐싱
+        const listElement = document.getElementById('dataList');
+        const resultElement = document.getElementById('postResult');
+
+        // [원칙 2 & 3] 최신 문법(async/await) 및 예외 처리(try-catch)
+        const fetchAndRender = async () => {
+            listElement.innerHTML = '<li>로딩 중... ⏳</li>';
+
+            try {
+                const response = await fetch(ENDPOINT_GET);
+                if (!response.ok) throw new Error(`HTTP 에러! 상태 코드: ${response.status}`);
+                
+                const data = await response.json();
+
+                // [원칙 4] 보일러플레이트 최소화 & Null-safety: Array map과 join으로 DOM 조작 한 방에 끝내기
+                listElement.innerHTML = data?.length 
+                    ? data.map(item => `<li><strong>${item.id}</strong>: ${item.title}</li>`).join('') 
+                    : '<li>데이터가 없습니다.</li>';
+
+            } catch (error) {
+                console.error('GET API 실패:', error);
+                listElement.innerHTML = `<li class="error">에러 발생: ${error.message}</li>`;
+            }
+        };
+
+        const resetData = async () => {
+            resultElement.textContent = '초기화 요청 중... ⏳';
+            resultElement.className = '';
+
+            try {
+                const response = await fetch(ENDPOINT_POST, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // 서버로 보낼 초기화 페이로드
+                    body: JSON.stringify({ action: 'RESET_DATA', timestamp: Date.now() }) 
+                });
+
+                if (!response.ok) throw new Error(`HTTP 에러! 상태 코드: ${response.status}`);
+
+                const result = await response.json();
+                resultElement.textContent = `✅ 초기화 성공! (가짜 API 응답 ID: ${result?.id})`;
+
+            } catch (error) {
+                console.error('POST API 실패:', error);
+                resultElement.textContent = `❌ 실패: ${error.message}`;
+                resultElement.className = 'error';
+            }
+        };
+
+        // 이벤트 리스너 등록
+        document.getElementById('btnFetch').addEventListener('click', fetchAndRender);
+        document.getElementById('btnReset').addEventListener('click', resetData);
+    </script>
+</body>
+</html>
