@@ -4,9 +4,9 @@ export const API_CONFIG = {
 };
 
 /**
- * Fetches game types based on the selected server
- * @param {string} server - 'staging4' or 'product'
- * @returns {Promise<Array>} Array of game type objects
+ * 선택된 서버에 기반하여 게임 타입 목록을 가져옵니다.
+ * @param {string} server - 'staging4' 또는 'product'
+ * @returns {Promise<Array>} 게임 타입 객체들의 배열
  */
 export async function fetchGameTypes(server) {
     const url = API_CONFIG[server];

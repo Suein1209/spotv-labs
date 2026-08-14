@@ -14,20 +14,20 @@ export function initNowTab() {
     let currentServer = '';
     let currentGame = null;
 
-    // Toggle Server Dropdown
+    // 서버 드롭다운 열기/닫기
     btnServerSelect.addEventListener('click', () => {
         serverList.classList.toggle('hidden');
-        gametypeList.classList.add('hidden'); // Close other dropdown
+        gametypeList.classList.add('hidden'); // 다른 드롭다운 닫기
     });
 
-    // Select Server
+    // 서버 선택
     serverList.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
             currentServer = e.target.getAttribute('data-value');
             btnServerSelect.textContent = e.target.textContent + ' ▾';
             serverList.classList.add('hidden');
             
-            // Reset game type when server changes
+            // 서버가 변경될 때 게임 타입 초기화
             btnGametypeSelect.textContent = '게임 타입 ▾';
             gametypeList.innerHTML = '';
             currentGame = null;
@@ -35,9 +35,9 @@ export function initNowTab() {
         }
     });
 
-    // Toggle Gametype Dropdown & Fetch
+    // 게임타입 드롭다운 열기/닫기 및 데이터 가져오기
     btnGametypeSelect.addEventListener('click', async () => {
-        serverList.classList.add('hidden'); // Close other dropdown
+        serverList.classList.add('hidden'); // 다른 드롭다운 닫기
         
         const isHidden = gametypeList.classList.contains('hidden');
         if (!isHidden) {
@@ -50,7 +50,7 @@ export function initNowTab() {
             return;
         }
 
-        // Fetch games if list is empty
+        // 목록이 비어있다면 데이터 가져오기
         if (gametypeList.children.length === 0) {
             try {
                 errorEl.classList.add('hidden');
@@ -110,7 +110,7 @@ export function initNowTab() {
         if (currentServer === 'staging4') {
             deeplink = `https://stg4.spotvnow.co.kr/schedule/${currentGame.id}`;
         } else if (currentServer === 'product') {
-            // User requested the same URL for product
+            // 사용자가 Product도 같은 URL 형식을 요청함
             deeplink = `https://stg4.spotvnow.co.kr/schedule/${currentGame.id}`;
         }
         
@@ -124,7 +124,7 @@ export function initNowTab() {
         }, 10);
     }
     
-    // Close dropdowns when clicking outside
+    // 외부 영역 클릭 시 드롭다운 닫기
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.dropdown')) {
             serverList.classList.add('hidden');

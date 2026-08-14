@@ -61,12 +61,31 @@
         </section>
 
         <section id="spozone" class="tab-panel">
-            <div class="empty-state">
-                <h2>⚾️ Spozone</h2>
-                <p>아직 텅 비어있어요!</p>
+            <div class="session-card">
+                <h2>⚾️ CMS 초기화</h2>
+                <h3 class="sub-heading">STG 이메일 체크 초기화</h3>
+                
+                <div class="control-group autocomplete-container">
+                    <label>이메일 주소:</label>
+                    <input type="email" id="spozone-email-input" class="text-input" placeholder="이메일을 입력하세요" autocomplete="off" />
+                    <ul id="email-autocomplete-list" class="autocomplete-list hidden"></ul>
+                </div>
+
+                <button id="btn-spozone-reset" class="action-btn bouncy hidden">🚀 실행</button>
             </div>
         </section>
     </main>
+
+    <!-- Notifications -->
+    <div id="toast-container" class="toast hidden"></div>
+    
+    <div id="error-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <h3 style="color:var(--primary-color);">에러발생 🚨</h3>
+            <p id="error-popup-code" style="margin-top:10px; font-weight:bold;"></p>
+            <button id="btn-close-popup" class="action-btn" style="margin-top:15px; padding:10px;">닫기</button>
+        </div>
+    </div>
 
     <script type="module" src="js/main.js"></script>
 </body>
