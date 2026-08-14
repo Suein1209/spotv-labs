@@ -20,28 +20,28 @@
     <main class="app-content">
         <section id="now" class="tab-panel active">
             <div class="session-card">
-                <h2>🚀 DeepLink Session</h2>
+                <h2>🚀 일정 DeepLink</h2>
+                <h3 class="sub-heading">초기 진입화면</h3>
                 
-                <div class="control-group">
-                    <label>서버 선택:</label>
-                    <div class="radio-group">
-                        <label class="radio-btn">
-                            <input type="radio" name="server" value="staging4" checked>
-                            <span class="custom-radio">Staging4</span>
-                        </label>
-                        <label class="radio-btn">
-                            <input type="radio" name="server" value="product">
-                            <span class="custom-radio">Product</span>
-                        </label>
+                <div class="dropdown-group">
+                    <div class="dropdown">
+                        <button id="btn-server-select" class="dropdown-toggle">서버 ▾</button>
+                        <ul id="server-list" class="dropdown-menu hidden">
+                            <li data-value="staging4">Staging4</li>
+                            <li data-value="product">Product</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button id="btn-gametype-select" class="dropdown-toggle">게임 타입 ▾</button>
+                        <ul id="gametype-list" class="dropdown-menu hidden">
+                            <!-- Game types will be loaded here -->
+                        </ul>
                     </div>
                 </div>
-
-                <button id="btn-fetch-games" class="action-btn bouncy">🎮 게임타입 불러오기</button>
                 
                 <div id="loading" class="hidden">불러오는 중... ⏳</div>
                 <div id="error-message" class="hidden error"></div>
-
-                <ul id="game-list" class="game-list"></ul>
                 
                 <div id="deeplink-panel" class="hidden deeplink-panel">
                     <h3>생성된 딥링크 🔗</h3>
