@@ -22,8 +22,8 @@ The APIs it calls are on external SPOTV domains, so failures are often CORS-rela
 - `js/main.js` imports each tab's `init*Tab()` and calls them on `DOMContentLoaded`, then handles tab switching: `.tab-btn[data-tab=X]` toggles the `active` class on `section#X.tab-panel`.
 - `js/components/*-tab.js` — one module per tab, each exporting an `initXxxTab()` that grabs its DOM nodes and holds state in closure variables. Show/hide is done via the `hidden` CSS class throughout.
   - `now-tab.js` — server (staging4/product) + game type dropdowns. It fetches game types through `js/api/api.js` and builds a schedule deeplink. Note: the product branch currently also builds a `stg4` URL on purpose (per a user request).
-  - `spozone-tab.js` — email input with domain autocomplete. It POSTs to `https://stg.spotvnow.jp/api/v2/emailCodes/reset` (response is a bare `true`/`false`) and persists the last email in `localStorage` (`savedSpozoneEmail`). It also owns the shared `#toast-container` and `#error-popup` elements.
-- `js/api/api.js` — `API_CONFIG` maps server keys to endpoints. Only the Now tab uses it; the Spozone tab calls `fetch` inline.
+  - `spozone-tab.js` — email input with domain autocomplete. It calls `resetEmailCode()` in `js/api/api.js` (response is a bare `true`/`false`) and persists the last email in `localStorage` (`savedSpozoneEmail`). It also owns the shared `#toast-container` and `#error-popup` elements.
+- `js/api/api.js` — `API_CONFIG` maps server keys to Now-tab endpoints. `SPOZONE_CONFIG` + `resetEmailCode()` (throws `ApiError`) call the STG reset API directly. STG is reachable only from the office network (IP-restricted, so a Cloudflare Worker proxy was tried and rejected with 403), and the GitHub Pages origin must be in the backend's CORS allowlist.
 - The `Golf` tab is a placeholder (`empty-state`) with no JS.
 - Styling is a single `css/style.css` (Google Font "Jua", CSS variables such as `--primary-color`).
 

@@ -1,3 +1,5 @@
+import { resetEmailCode, ApiError } from '../api/api.js';
+
 const LABELS = {
     run: '인증 초기화',
     running: '초기화 중…',
@@ -103,40 +105,19 @@ export function initSpozoneTab() {
         btnReset.textContent = LABELS.running;
 
         try {
-            const response = await fetch('https://stg.spotvnow.jp/api/v2/emailCodes/reset', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ email })
-            });
-
-            if (!response.ok) {
-                // 상태 코드와 메시지를 포함하는 에러 객체 생성 후 던지기
-                throw { status: response.status, message: 'API 응답 에러' };
-            }
-
-            const data = await response.json();
-            
-            if (data === true) {
-                showToast(LABELS.success);
-                // 성공 시 입력창 초기화 (선택 사항: 로컬스토리지는 유지됨)
-                // emailInput.value = ''; 
-                // btnReset.classList.add('hidden');
-            } else if (data === false) {
-                showToast(LABELS.notFound);
-            } else {
-                throw { status: 'Parsing Error', message: '알 수 없는 응답 형식' };
-            }
+            // STG API 직접 호출 (api.js 의 resetEmailCode 사용)
+            const isReset = await resetEmailCode(email);
+            // true: 초기화 성공 / false: 등록되지 않은 이메일
+            showToast(isReset ? LABELS.success : LABELS.notFound);
         } catch (error) {
-            // 네트워크/CORS 에러 (TypeError: Failed to fetch) 처리
             if (error instanceof TypeError) {
+                // 네트워크 끊김, 회사 네트워크 밖에서 접속, 또는 서버 CORS 미허용
                 showErrorPopup('Network/CORS Error', error.message);
-            } else if (error.status) {
+            } else if (error instanceof ApiError) {
+                // 서버가 에러 상태 코드를 응답했거나 응답 형식이 이상한 경우
                 showErrorPopup(error.status, error.message);
             } else {
-                showErrorPopup('Error', error.message || '알 수 없는 오류');
+                showErrorPopup('Error', error?.message ?? '알 수 없는 오류');
             }
         } finally {
             btnReset.disabled = false;
