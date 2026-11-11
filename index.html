@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#F4F6F8">
     <title>SpoTv Labs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2.0.5/fonts/variable/woff2/SUIT-Variable.css">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="app-header">
-        <h1>🌟 SpoTv Play 🌟</h1>
-        <nav class="tabs">
+        <h1 class="wordmark">SpoTv Labs</h1>
+        <nav class="tabs" aria-label="도구 선택">
             <button class="tab-btn active" data-tab="now">Now</button>
             <button class="tab-btn" data-tab="golf">Golf</button>
             <button class="tab-btn" data-tab="spozone">Spozone</button>
@@ -20,70 +21,72 @@
     <main class="app-content">
         <section id="now" class="tab-panel active">
             <div class="session-card">
-                <h2>🚀 일정 DeepLink</h2>
-                <h3 class="sub-heading">초기 진입화면</h3>
-                
+                <h2>일정 딥링크</h2>
+                <p class="sub-heading">서버와 게임 타입을 고르면 앱 일정 화면으로 가는 링크를 만듭니다.</p>
+
                 <div class="dropdown-group">
                     <div class="dropdown">
-                        <button id="btn-server-select" class="dropdown-toggle">서버 ▾</button>
+                        <span class="field-label">서버</span>
+                        <button id="btn-server-select" class="dropdown-toggle">선택하세요</button>
                         <ul id="server-list" class="dropdown-menu hidden">
                             <li data-value="staging4">Staging4</li>
                             <li data-value="product">Product</li>
                         </ul>
                     </div>
-                    
+
                     <div class="dropdown">
-                        <button id="btn-gametype-select" class="dropdown-toggle">게임 타입 ▾</button>
+                        <span class="field-label">게임 타입</span>
+                        <button id="btn-gametype-select" class="dropdown-toggle">선택하세요</button>
                         <ul id="gametype-list" class="dropdown-menu hidden">
                             <!-- Game types will be loaded here -->
                         </ul>
                     </div>
                 </div>
-                
-                <div id="loading" class="hidden">불러오는 중... ⏳</div>
-                <div id="error-message" class="hidden error"></div>
-                
+
+                <div id="loading" class="hidden">게임 타입을 불러오는 중</div>
+                <div id="error-message" class="hidden error" role="alert"></div>
+
                 <div id="deeplink-panel" class="hidden deeplink-panel">
-                    <h3>생성된 딥링크 🔗</h3>
+                    <h3>딥링크</h3>
                     <div class="deeplink-url-box">
                         <code id="deeplink-url"></code>
                     </div>
-                    <a id="btn-execute-deeplink" href="#" target="_blank" class="action-btn execute-btn">🏃 딥링크 실행하기</a>
+                    <a id="btn-execute-deeplink" href="#" target="_blank" class="action-btn execute-btn">딥링크 열기</a>
                 </div>
             </div>
         </section>
 
         <section id="golf" class="tab-panel">
             <div class="empty-state">
-                <h2>⛳️ Golf</h2>
-                <p>곧 추가될 기능이에요!</p>
+                <h2>Golf</h2>
+                <p>Golf 테스트 도구는 준비 중입니다.</p>
             </div>
         </section>
 
         <section id="spozone" class="tab-panel">
             <div class="session-card">
-                <h2>⚾️ CMS 초기화</h2>
-                <h3 class="sub-heading">STG 이메일 체크 초기화</h3>
-                
+                <h2>이메일 인증 초기화</h2>
+                <p class="sub-heading">STG 환경에서 계정의 이메일 인증 상태를 처음으로 되돌립니다.</p>
+
                 <div class="control-group autocomplete-container">
-                    <label>이메일 주소:</label>
-                    <input type="email" id="spozone-email-input" class="text-input" placeholder="이메일을 입력하세요" autocomplete="off" />
+                    <label class="field-label" for="spozone-email-input">이메일</label>
+                    <input type="email" id="spozone-email-input" class="text-input" placeholder="name@example.com" autocomplete="off" />
                     <ul id="email-autocomplete-list" class="autocomplete-list hidden"></ul>
                 </div>
 
-                <button id="btn-spozone-reset" class="action-btn bouncy hidden">🚀 실행</button>
+                <button id="btn-spozone-reset" class="action-btn hidden">인증 초기화</button>
             </div>
         </section>
     </main>
 
     <!-- Notifications -->
-    <div id="toast-container" class="toast hidden"></div>
-    
+    <div id="toast-container" class="toast hidden" role="status"></div>
+
     <div id="error-popup" class="popup-overlay hidden">
-        <div class="popup-content">
-            <h3 style="color:var(--primary-color);">에러발생 🚨</h3>
-            <p id="error-popup-code" style="margin-top:10px; font-weight:bold;"></p>
-            <button id="btn-close-popup" class="action-btn" style="margin-top:15px; padding:10px;">닫기</button>
+        <div class="popup-content" role="alertdialog" aria-labelledby="error-popup-title">
+            <h3 id="error-popup-title">요청 실패</h3>
+            <p id="error-popup-code"></p>
+            <button id="btn-close-popup" class="action-btn">닫기</button>
         </div>
     </div>
 

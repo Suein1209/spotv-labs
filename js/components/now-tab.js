@@ -1,5 +1,8 @@
 import { fetchGameTypes } from '../api/api.js';
 
+const PLACEHOLDER_TEXT = '선택하세요';
+const EMPTY_GAME_TEXT = '등록된 게임 타입이 없습니다.';
+
 export function initNowTab() {
     const btnServerSelect = document.getElementById('btn-server-select');
     const serverList = document.getElementById('server-list');
@@ -24,11 +27,11 @@ export function initNowTab() {
     serverList.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
             currentServer = e.target.getAttribute('data-value');
-            btnServerSelect.textContent = e.target.textContent + ' ▾';
+            btnServerSelect.textContent = e.target.textContent;
             serverList.classList.add('hidden');
             
             // 서버가 변경될 때 게임 타입 초기화
-            btnGametypeSelect.textContent = '게임 타입 ▾';
+            btnGametypeSelect.textContent = PLACEHOLDER_TEXT;
             gametypeList.innerHTML = '';
             currentGame = null;
             deeplinkPanel.classList.add('hidden');
@@ -73,7 +76,7 @@ export function initNowTab() {
     function renderGameList(games) {
         gametypeList.innerHTML = '';
         if (!games || games.length === 0) {
-            gametypeList.innerHTML = '<li style="text-align:center">등록된 게임타입이 없어요!</li>';
+            gametypeList.innerHTML = `<li class="menu-empty">${EMPTY_GAME_TEXT}</li>`;
             return;
         }
 
@@ -94,7 +97,7 @@ export function initNowTab() {
 
             li.addEventListener('click', () => {
                 currentGame = game;
-                btnGametypeSelect.textContent = game.name + ' ▾';
+                btnGametypeSelect.textContent = game.name;
                 gametypeList.classList.add('hidden');
                 generateDeeplink();
             });
